@@ -1,0 +1,95 @@
+﻿@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/Main_Layout.cshtml";
+}
+
+<div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="section-title">                 
+                    <h2>SẢN PHẨM ĐIỆN GIA DỤNG</h2>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+
+            @if (ViewBag.ListDGD != null)
+            {
+                @foreach (var item in ((List<DoAnCoSo.Models.SanPham>)ViewBag.ListDGD).Take(4)) // Lấy ra 3 sản phẩm
+                {
+                    <div class="col-lg-3 col-md-6 col-sm-6 mix new-arrivals">
+                        <div class="product__item">
+                            <a asp-controller="Home" asp-action="ChiTietSanPham" asp-route-maSanPham="@item.MaSanPham">
+                                <div class="product__item__pic set-bg" data-setbg="@Url.Content("~/images/hinhSP/" + item.HinhSp)">
+                                </div>
+                            </a>
+
+                            <div class="product__item__text d-flex flex-column align-items-center">
+                                <h6>@item.TenSp</h6>
+                                <a asp-action="AddToCart" asp-controller="Cart" asp-route-maSanPham="@item.MaSanPham" class="add-cart">+ Add To Cart</a>
+                                <h5 class="text-danger">@item.Gia.Value.ToString("#,##0").Replace(',', '.')đ</h5>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <p>Không có sản phẩm nào.</p>
+            }
+
+        </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="section-title">
+                <h2>THIẾT BỊ ĐIỆN</h2>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+
+        @if (ViewBag.ListTBD != null)
+        {
+            @foreach (var item in ((List<DoAnCoSo.Models.SanPham>)ViewBag.ListTBD).Take(4)) // Lấy ra 3 sản phẩm
+            {
+                <div class="col-lg-3 col-md-6 col-sm-6 mix new-arrivals">
+                    <div class="product__item">
+                        <a asp-controller="Home" asp-action="ChiTietSanPham" asp-route-maSanPham="@item.MaSanPham">
+                            <div class="product__item__pic set-bg" data-setbg="@Url.Content("~/images/hinhSP/" + item.HinhSp)">
+                            </div>
+                        </a>
+
+                        <div class="product__item__text d-flex flex-column align-items-center">
+                            <h6>@item.TenSp</h6>
+                            <a asp-action="AddToCart" asp-controller="Cart" asp-route-maSanPham="@item.MaSanPham" class="add-cart">+ Add To Cart</a>
+                            <h5 class="text-danger">@item.Gia.Value.ToString("#,##0").Replace(',', '.')đ</h5>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <p>Không có sản phẩm nào.</p>
+        }
+
+    </div>
+  
+
+</div>
+
+@* @using X.PagedList.Mvc.Core;
+@model X.PagedList.IPagedList<SanPham>
+
+
+@foreach (var item in Model)
+{
+
+    @await Html.PartialAsync("PartialSanPham", item)
+}
+<div class="product__pagination">
+    @Html.PagedListPager(Model, page => Url.Action("Index", new { page = page }))
+
+</div> *@
+

@@ -1,0 +1,19 @@
+﻿@model SanPham
+
+
+<div b-26bex91a7p="" class="col-lg-3 col-md-6 col-sm-6 col-md-6 col-sm-6 mix new-arrivals">
+    <div b-26bex91a7p="" class="product__item">
+        <a asp-controller="Home" asp-action="ChiTietSanPham" asp-route-MaSanPham="@Model.MaSanPham">
+            <div class="product__item__pic set-bg" data-setbg="@Url.Content("~/images/hinhSP/" + Model.HinhSp)">
+            </div>
+
+        </a>
+
+        <div b-26bex91a7p="" class="product__item__text">
+            <h6 b-26bex91a7p="">@Model.TenSp</h6>
+            <a b-26bex91a7p="" asp-action="AddToCart" asp-controller="Cart" asp-route-maSanPham="@Model.MaSanPham" class="add-cart">+ Add To Cart</a>
+            <h5 b-26bex91a7p="" class="text-danger">@Model.Gia.Value.ToString("#,##0").Replace(',', '.')đ</h5>
+
+        </div>
+    </div>
+</div>

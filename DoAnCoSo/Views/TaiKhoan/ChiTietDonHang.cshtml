@@ -1,0 +1,33 @@
+﻿@model List<DoAnCoSo.Models.ChiTietDonHang>
+@{
+    ViewData["Title"] = "ChiTietDonHang";
+    Layout = "~/Views/Shared/Main_Layout.cshtml";
+}
+
+
+<div class="container">
+    <h2>Chi tiết đơn hàng</h2>
+    <table class="table">
+        <thead>
+            <tr>
+
+                <th>Tên sản phẩm</th>
+                <th>Số lượng</th>
+                <th>Đơn giá</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+
+                    <td>@item.TenSp</td>
+                    <td>@item.SoLuong</td>
+                    <td>@item.Gia</td>
+
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+

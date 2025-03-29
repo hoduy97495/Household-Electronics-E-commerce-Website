@@ -1,0 +1,53 @@
+﻿@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/Main_Layout.cshtml";
+}
+@using X.PagedList.Mvc.Core;
+@model X.PagedList.IPagedList<SanPham>
+
+<section class="shop spad">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-3">
+                <div class="shop__sidebar">
+                    <div class="shop__sidebar__search">
+                        <form asp-controller="Product" asp-action="Index" method="get">
+                            <input type="text" placeholder="Search..." value="@ViewBag.SearchQuery" name="searchQuery">
+                            <button type="submit"><span class="icon_search"></span></button>
+                        </form>
+                    </div>
+                    <div class="shop__sidebar__accordion">
+                        <div class="accordion" id="accordionExample">
+                            <div class="card">
+                                @await Component.InvokeAsync("DanhMucMenu")
+
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+           
+            <div class="col-lg-9">
+               
+                <div class="row">
+                   
+                    @foreach (var item in Model)
+                    {
+
+                        @await Html.PartialAsync("PartialSanPham", item)
+                    }
+
+
+                </div>
+                <div class="product__pagination">
+                    @Html.PagedListPager(Model, page => Url.Action("Index", new { page = page, searchQuery = ViewBag.SearchQuery, maDanhMuc = ViewBag.MaDanhMuc }))
+
+                </div>
+            </div>
+        </div>
+    </div>
+    
+</section>

@@ -1,0 +1,63 @@
+﻿@model DoAnCoSo.Areas.Admin.Models.CreateCustomerDto
+
+@{
+    ViewData["Title"] = "Sửa khách hàng";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+<main>
+    <div class="container-fluid px-4">
+        <h4>Cập nhật thông tin của Khách hàng @Model.Ten</h4>
+        <div class="row">
+            <div class="col-md-4">
+                <form href="/Admin/khachhang/CreateCustomer" method="post">
+                    <input name="MaTk" type="hidden" value="@Model.MaTk" />
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="form-group">
+                        <label asp-for="Ten" class="control-label">Tên Khách hàng</label>
+                        <input asp-for="Ten" class="form-control" />
+                        <span asp-validation-for="Ten" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Sdt" class="control-label">Số điện thoại</label>
+                        <input asp-for="Sdt" class="form-control" />
+                        <span asp-validation-for="Sdt" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="DiaChi" class="control-label">Địa chỉ</label>
+                        <input asp-for="DiaChi" class="form-control" />
+                        <span asp-validation-for="DiaChi" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Email" class="control-label">Email</label>
+                        <input asp-for="Email" class="form-control" />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="MatKhau" class="control-label">Mật khẩu</label>
+                        <input asp-for="MatKhau" class="form-control"  value="@Model.MatKhau" type="password" />
+                        <span asp-validation-for="MatKhau" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="XacNhanMatKhau" class="control-label">Xác nhận mật khẩu</label>
+                        <input asp-for="XacNhanMatKhau" value="@Model.MatKhau" class="form-control" type="password" />
+                        <span asp-validation-for="XacNhanMatKhau" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="NgaySinh" class="control-label">Ngày sinh</label>
+                        <input asp-for="NgaySinh" class="form-control" value="@Model.NgaySinh.ToString("yyyy-MM-dd")" type="date" />
+                        <span asp-validation-for="NgaySinh" class="text-danger"></span>
+                    </div>
+                    <div class="form-group mt-4">
+                        <input type="submit" value="Sửa" class="btn btn-primary" />
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div>
+            <a asp-action="Index">Quay Lại</a>
+        </div>
+    </div>
+</main>
+
+

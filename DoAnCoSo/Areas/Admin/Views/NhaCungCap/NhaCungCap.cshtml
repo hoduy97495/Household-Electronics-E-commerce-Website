@@ -1,0 +1,70 @@
+﻿@using DoAnCoSo.Models
+@using X.PagedList.Mvc.Core
+@model X.PagedList.IPagedList<NhaCungCap>
+
+@{
+    ViewData["Title"] = "Danh Sách Nhà Cung Cấp";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+<h1 class="mb-4">@ViewData["Title"]</h1>
+
+<p>
+    <a asp-action="ThemNhaCungCapMoi">Thêm nhà cung cấp</a>
+</p>
+
+<div class="card">
+    <div class="card-header">
+        Danh Sách Nhà Cung Cấp
+    </div>
+    <div class="card-body">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Tên</th>
+                    <th>Địa chỉ</th>
+                    <th>Email</th>
+                    <th>Số điện thoại</th>
+                    <th>Hành Động</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@Html.DisplayFor(modelItem => item.TenNcc)</td>
+                        <td>@Html.DisplayFor(modelItem => item.DiaChi)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Email)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Sdt)</td>
+                        <td>
+                            <a class="btn btn-sm btn-warning" asp-action="SuaNhaCungCap" asp-route-id="@item.MaNcc"><i class="fas fa-edit"></i> Sửa</a>
+                            <form method="post" asp-action="XoaNhaCungCap">
+                                <input type="hidden" name="id" value="@item.MaNcc" />
+                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Bạn có chắc chắn muốn xóa nhà cung cấp này?');"><i class="fas fa-trash"></i> Xóa</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="product__pagination">
+    @Html.PagedListPager(Model, page => Url.Action("NhaCungCap", new { page }), new PagedListRenderOptions
+{
+    LiElementClasses = new[] { "page-item" },
+    PageClasses = new[] { "page-link" },
+    UlElementClasses = new[] { "pagination" },
+    DisplayLinkToFirstPage = PagedListDisplayMode.Always,
+    DisplayLinkToLastPage = PagedListDisplayMode.Always,
+    DisplayLinkToPreviousPage = PagedListDisplayMode.Always,
+    DisplayLinkToNextPage = PagedListDisplayMode.Always,
+    DisplayLinkToIndividualPages = true,
+    LinkToFirstPageFormat = "First",
+    LinkToPreviousPageFormat = "Previous",
+    LinkToNextPageFormat = "Next",
+    LinkToLastPageFormat = "Last"
+})
+</div>

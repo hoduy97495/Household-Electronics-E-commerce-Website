@@ -1,0 +1,47 @@
+﻿@{
+    ViewData["Title"] = "Chi tiết phiếu nhập";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+<div class="row">
+    <div class="card  mt-4">
+        <div class="card-header">
+            <h3>
+                <strong>Thông tin chi tiết phiếu nhập:</strong></h5>
+                <p>Mã phiếu nhập: @ViewBag.PhieuNhap.MaPn</p>
+                <p>Tên nhà cung cấp : @ViewBag.PhieuNhap.MaNccNavigation.TenNcc</p>
+                <p>Ngày nhập : @ViewBag.PhieuNhap.NgayNhap</p>
+                <a class="btn btn-warning btn-sm" href="/Admin/PhieuNhap/Edit?maPN=@ViewBag.PhieuNhap.MaPn">Sửa</a>
+        </div>
+        <div class="card-body">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Mã sản phẩm </th>
+                        <th>Tên sản phẩm</th>
+                        <th>Số lượng</th>
+                        <th>Đơn giá</th>
+                        <!-- Add more headers if needed -->
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in ViewBag.PhieuNhapCT)
+                    {
+                        <tr>
+                            <td>@item.MaSanPham</td>
+                            <td>@item.MaSanPhamNavigation.TenSp</td>
+                            <td>@item.SoLuongNhap</td>
+                            <td>@item.DonGia</td>
+                            <!-- Display other properties of ChiTietSPPhieuNhap as needed -->
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div>
+            <a asp-action="Index">Quay Lại</a>
+        </div>
+    </div>
+
+</div>
+

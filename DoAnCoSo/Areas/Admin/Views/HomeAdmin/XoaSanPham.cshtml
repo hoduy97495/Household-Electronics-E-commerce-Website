@@ -1,0 +1,35 @@
+﻿@model DoAnCoSo.Models.SanPham
+
+@{
+    ViewData["Title"] = "Xóa Sản Phẩm";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<h1>Xóa Sản Phẩm</h1>
+
+<h4>Bạn có chắc chắn muốn xóa sản phẩm này?</h4>
+<div>
+    <h4>SanPham</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.TenSp)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.TenSp)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Gia)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Gia)
+        </dd>
+        <!-- Thêm các trường khác nếu cần -->
+    </dl>
+</div>
+
+<form method="post" asp-action="XoaSanPham">
+    <input type="hidden" asp-for="MaSanPham" />
+    <input type="submit" value="Xóa" class="btn btn-danger" /> |
+    <a asp-action="SanPham">Quay lại danh sách</a>
+</form>

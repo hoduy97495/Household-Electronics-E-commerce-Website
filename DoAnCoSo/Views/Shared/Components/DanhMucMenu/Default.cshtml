@@ -1,0 +1,16 @@
+﻿@model IEnumerable<DanhMuc>
+<div class="card-heading">
+    <a data-toggle="collapse" data-target="#collapseOne">Danh mục sản phẩm</a>
+</div>
+<div id="collapseOne" class="collapse show" data-parent="#accordionExample">
+    <div class="card-body">
+        <div class="shop__sidebar__categories">
+            <ul class="nice-scroll">
+                @foreach (var item in Model)
+                {
+                    <li><a asp-controller="Product" asp-action="Index" asp-route-maDanhMuc="@item.MaDanhMuc">@item.TenDanhMuc</a></li>
+                }
+            </ul>
+        </div>
+    </div>
+</div>

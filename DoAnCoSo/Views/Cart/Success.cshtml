@@ -1,0 +1,32 @@
+﻿
+@{
+    ViewData["Title"] = "Success";
+	var orderDetails = TempData["OrderDetails"] as DoAnCoSo.Models.DonDatHang;
+}
+
+<div class="container-fluid contact py-5">
+	<div class="container">
+		<div class="p-5 bg-light rounded">
+			<div class="row g-4">
+				<div class="col-12">
+					<div class="text-center mx-auto" style="max-width: 700px;">
+						<h2 class="">Đặt Hàng Thành Công</h2>
+
+						<h3 class="text-danger">@TempData["Message"]</h3>
+						@if (orderDetails != null)
+						{
+							<h4>Thông tin đơn hàng:</h4>
+							<p>Mã đơn hàng:#@orderDetails.MaDdh</p>
+							<p>Ngày đặt hàng: @orderDetails.NgayDat</p>
+							<p>Số tiền: @orderDetails.Tong.Value.ToString("#,##0").Replace(',', '.')đ</p>
+							<!-- Hiển thị các thông tin khác của đơn hàng -->
+						}
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+

@@ -1,0 +1,44 @@
+﻿@{
+    ViewData["Title"] = "SanPhamTheoLoai";
+    Layout = "~/Views/Shared/Main_Layout.cshtml";
+}
+
+@model List<SanPham>
+@foreach (var item in Model)
+{
+    <div b-26bex91a7p="" class="col-lg-3 col-md-6 col-sm-6 col-md-6 col-sm-6 mix new-arrivals">
+        <div b-26bex91a7p="" class="product__item">
+            <a asp-controller="Home" asp-action="ChiTietSanPham" asp-route-MaSanPham="@item.MaSanPham">
+                <div class="product__item__pic set-bg" data-setbg="@Url.Content("~/images/hinhSP/" + item.HinhSp)">
+                </div>
+
+            </a>
+            @*  <div b-26bex91a7p="" class="product__item__pic set-bg" data-setbg="@Url.Content("../images/hinhSP/" + item.HinhSp)" style="">
+                <span b-26bex91a7p="" class="label">New</span>
+                
+            </div> *@
+            <div b-26bex91a7p="" class="product__item__text">
+                <h6 b-26bex91a7p="">@item.TenSp</h6> @* ten san pham *@
+                <a b-26bex91a7p="" href="#" class="add-cart">+ Add To Cart</a>
+                @*  <div b-26bex91a7p="" class="rating">
+            <i b-26bex91a7p="" class="fa fa-star-o"></i>
+            <i b-26bex91a7p="" class="fa fa-star-o"></i>
+            <i b-26bex91a7p="" class="fa fa-star-o"></i>
+            <i b-26bex91a7p="" class="fa fa-star-o"></i>
+            <i b-26bex91a7p="" class="fa fa-star-o"></i>
+            </div>  *@ <h5 b-26bex91a7p="" class="text-danger">@item.Gia.Value.ToString("#,##0").Replace(',', '.')đ</h5> @* gia san pham *@
+                @* <div b-26bex91a7p="" class="product__color__select">
+            <label b-26bex91a7p="" for="pc-1">
+            <input b-26bex91a7p="" type="radio" id="pc-1">
+            </label>
+            <label b-26bex91a7p="" class="active black" for="pc-2">
+            <input b-26bex91a7p="" type="radio" id="pc-2">
+            </label>
+            <label b-26bex91a7p="" class="grey" for="pc-3">
+            <input b-26bex91a7p="" type="radio" id="pc-3">
+            </label>
+            </div> *@
+            </div>
+        </div>
+    </div>
+}

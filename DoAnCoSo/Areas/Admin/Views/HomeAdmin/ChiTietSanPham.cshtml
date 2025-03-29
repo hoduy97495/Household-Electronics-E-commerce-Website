@@ -1,0 +1,34 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@model DoAnCoSo.Areas.Admin.Models.ProductDetailView
+
+@{
+    ViewData["Title"] = "Chi tiết sản phẩm";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<hr />
+<div class="row">
+    <div class="col-md-6">
+        <img src="~/images/hinhSP/@Model.HinhSp" class="img-fluid" alt="@Model.TenSp">
+    </div>
+    <div class="col-md-6">
+        <h2>@Model.TenSp</h2>
+        <p>Mã sản phẩm: @Model.MaSanPham</p>
+        <p>Giá: @Model.Gia.Value.ToString("#,##0").Replace(',', '.')đ</p>
+        <p>Số lượng: @Model.SoLuong</p>
+        <p>Lượt mua: @Model.LuotMua</p>
+        <p>Nhà sản xuất: @Model.TenNsx</p>
+        <p>Nhà cung cấp: @Model.TenNcc</p>
+        <p>Danh mục: @Model.TenDanhMuc</p>
+        <p>Ngày tạo: @Model.NgayTao?.ToString("dd/MM/yyyy HH:mm:ss")</p>
+        <hr />
+        <h4>Mô tả</h4>
+        <p>@Model.MoTa</p>
+        <h4>Chi tiết</h4>
+        <p>@Model.ChiTiet</p>
+    </div>
+</div>
+
+<div>
+    <a asp-action="SanPham">Quay lại</a>
+</div>

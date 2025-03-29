@@ -1,0 +1,256 @@
+﻿@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+
+<div class="content-wrapper">
+    <div class="page-header">
+        <h3 class="page-title">
+            <span class="page-title-icon bg-gradient-primary text-white me-2">
+                <i class="mdi mdi-home"></i>
+            </span> Thống Kê
+        </h3>
+        <nav aria-label="breadcrumb">
+            <ul class="breadcrumb">
+                <li class="breadcrumb-item active" aria-current="page">
+                    <span></span>Overview <i class="mdi mdi-alert-circle-outline icon-sm text-primary align-middle"></i>
+                    <h5 class="mb-0 fw-bold text-dark text-uppercase" id="text-date">...</h5>
+                </li>
+            </ul>
+        </nav>
+    </div>
+    <div class="row justify-content-start">
+        <div class="col-md-6">
+            <div class="input-group">
+                <input class="form-control mb-3" style="width:150px !important ;margin-right:30px" value="@DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd")" type="date" id="date_start" max="@DateTime.Now.AddYears(1).ToString("yyyy-MM-dd")" min="@DateTime.Now.AddYears(-1).ToString("yyyy-MM-dd")" />
+
+                <input class="form-control mb-3" type="date" style="width:150px !important;margin-right:30px" value="@DateTime.Now.ToString("yyyy-MM-dd")" id="date_end" max="@DateTime.Now.AddYears(1).ToString("yyyy-MM-dd")" min="@DateTime.Now.AddYears(-1).ToString("yyyy-MM-dd")" />
+
+                   <button type="submit" class="btn btn-primary btn-sm mb-3" onclick="return GetFillterReprort()">Lọc</button>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4 stretch-card grid-margin">
+            <div class="card bg-gradient-danger card-img-holder text-white">
+                <div class="card-body">
+                
+                    <h4 class="font-weight-normal mb-3">
+                        Doanh thu <i class="mdi mdi-chart-line mdi-24px float-right"></i>
+                    </h4>
+                    <h2 class="mb-5" id="total_money"></h2>
+                    
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 stretch-card grid-margin">
+            <div class="card bg-gradient-info card-img-holder text-white">
+                <div class="card-body">
+                  
+                    <h4 class="font-weight-normal mb-3">
+                        Tổng đơn hàng<i class="mdi mdi-bookmark-outline mdi-24px float-right"></i>
+                    </h4>
+                    <h2 class="mb-5" id="total_order"></h2>
+                    
+                </div>
+            </div>
+        </div>
+      
+       @*  <div class="col-md-4 stretch-card grid-margin">
+            <div class="card bg-gradient-success card-img-holder text-white">
+                <div class="card-body">
+                    <img src="assets/images/dashboard/circle.svg" class="card-img-absolute" alt="circle-image" />
+                    <h4 class="font-weight-normal mb-3">
+                        Visitors Online <i class="mdi mdi-diamond mdi-24px float-right"></i>
+                    </h4>
+                    <h2 class="mb-5">95,5741</h2>
+                    <h6 class="card-text">Increased by 5%</h6>
+                </div>
+            </div>
+        </div> *@
+    </div>
+    <div class="row">
+        <div class="col-md-7 grid-margin stretch-card">
+            <div class="card">
+                <div class="card-body">
+                    <div class="clearfix">
+                        <h4 class="card-title float-left">Doanh thu</h4>
+                        <div id="visit-sale-chart-legend" class="rounded-legend legend-horizontal legend-top-right float-right"></div>
+                    </div>
+                    <canvas id="myChart" class="mt-4"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-5 grid-margin stretch-card">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Đơn hàng</h4>
+                    <canvas id="myChart2"></canvas>
+                    <div id="traffic-chart-legend" class="rounded-legend legend-vertical legend-bottom-left pt-4"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 grid-margin">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Doanh thu</h4>
+                    <div class="table-responsive">
+                        <table class="table" id="table-report">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        Ngày
+                                    </th>
+                                    <th>
+                                        Tổng doanh thu
+                                    </th>
+                                    <th>
+                                        Tổng đơn hàng
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody id="datatable_report">
+                                
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.2.0"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/linways/table-to-excel@v1.0.4/dist/tableToExcel.js"></script>
+<script>
+    var myChart;
+    var myChart2;
+    $(document).ready(function () {
+        GetFillterReprort();
+    });
+    function GetFillterReprort() {
+
+        var dateStart = moment($('#date_start').val());
+        var dateEnd = moment($('#date_end').val());
+       
+        if (dateStart.isAfter(dateEnd)) {
+            alert('Ngày bắt đầu phải nhỏ hơn ngày kết thúc');
+            return;
+        }
+        
+        $.ajax({
+            url: '/admin/homeadmin/GetReportData',
+            type: 'GET',
+            data: { dateStart: $('#date_start').val(), dateEnd: $('#date_end').val() },
+            dataType: 'json',
+            success: function (data) {
+                $('#text-date').text(`Từ ${dateStart.format('DD/MM/YYYY')} đến ${dateEnd.format('DD/MM/YYYY')}:`);
+                //Table
+                var tbody = $('#datatable_report');
+                tbody.empty();
+
+                $.each(data, function (i, item) {
+                    var dateValue = moment(item.dateValue).format('DD/MM/YYYY');
+                    var totalMoney = item.totalMoney.toLocaleString('vi-VN');
+                    var order = item.order.toLocaleString('vi-VN');
+
+                    var row = $('<tr>');
+                    row.append($('<td>').text(dateValue));
+                    row.append($('<td>').text(totalMoney + ' đ'));
+                    row.append($('<td>').text(order));
+
+                    tbody.append(row);
+                });
+                ////
+                var labels = [];
+                var orders = [];
+                var revenues = [];
+                var totalMoney = 0;
+                var totalOrder = 0;
+                $.each(data, function (i, item) {
+                    labels.push(moment(item.dateValue).format('DD/MM/YYYY ')); // format lại label
+                    orders.push(item.order);
+                    revenues.push(item.totalMoney);
+
+                    totalMoney += item.totalMoney;
+                    totalOrder += item.order;
+                });
+                $('#total_money').text(totalMoney.toLocaleString('vi-VN') + ' đ');
+                $('#total_order').text(totalOrder);
+                var ctx = document.getElementById('myChart').getContext('2d');
+                var ctx2 = document.getElementById('myChart2').getContext('2d');
+                if (myChart) {
+                    myChart.destroy();
+                }
+                if (myChart2) {
+                    myChart2.destroy();
+                }
+                myChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [
+                            
+                            {
+                                label: 'Doanh thu',
+                                data: revenues,
+
+
+
+                                backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                                borderColor: 'rgba(54, 162, 235, 1)',
+                                borderWidth: 1
+                            }
+                        ]
+                    },
+                    options: {
+                        scales: {
+                            yAxes: [{
+                                ticks: {
+                                    beginAtZero: true,
+                                    callback: function (value, index, values) {
+                                        return value.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+                                    }
+                                }
+                            }]
+                        },
+                        tooltips: {
+                            callbacks: {
+                                label: function (tooltipItem, data) {
+                               
+                                    var label = data.labels[tooltipItem.index];
+                                    label = moment(label).format('DD/MM/YYYY');
+                                    return label + ': ' + tooltipItem.yLabel.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+                                }
+                            }
+                        }
+                    }
+                });
+                myChart2 = new Chart(ctx2, {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [
+                            {
+                                label: 'Đơn hàng',
+                                data: orders,
+                                backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                                borderColor: 'rgba(255, 99, 132, 1)',
+                                borderWidth: 1
+
+                            }
+                        ]
+                    },
+                    
+                });
+            }
+        });
+    }
+   
+
+</script>
+

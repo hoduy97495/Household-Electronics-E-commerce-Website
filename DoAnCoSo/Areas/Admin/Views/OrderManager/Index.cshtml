@@ -1,0 +1,182 @@
+﻿@using DoAnCoSo.Models
+@using X.PagedList.Mvc.Core
+@model X.PagedList.IPagedList<DonDatHang>
+@{
+    ViewData["Title"] = "Đơn hàng";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+ 
+   
+}
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+<main>
+    <div class="container-fluid px-4 pt-2">
+        <h1 class="mt-4">Đơn hàng</h1>
+        <div class="card mb-4">
+            <div class="card-header">
+                <div class="row">
+                    <div class="col-md-2">
+                        <form method="get" href="@Url.Action("donhang", "admin", new {searchQuery = ViewBag.SearchQuery, status = ViewBag.Status})">
+                            <select class="form-control" id="status-filter" name="status" onchange="this.form.submit()" style="color:black!important">
+                                    <option value="">Tất cả trạng thái</option>
+                                    <option value="1">Đặt hàng</option>
+                                    <option value="2">Đang giao hàng</option>
+                                    <option value="3">Thành công</option>
+                                    <option value="4">Hủy</option>
+                             </select>
+                        </form>
+                    </div>
+                    <div class="col-md-4 ms-auto">
+                        <form method="get">
+                            <div class="input-group">
+                                <input class="form-control border-end-0 border rounded-pill " type="search" value="@ViewBag.SearchQuery" name="searchQuery" placeholder="nhập để tìm kiếm" id="example-search-input">
+                                <span class="input-group-append">
+                                    <button class="btn btn-outline-light bg-primary border-bottom-0 border rounded-pill ms-n5" type="submit">
+                                        <i class="fa fa-search">Tìm kiếm</i>
+                                    </button>
+                                </span>
+                            </div>
+
+                        </form>
+
+                    </div>
+                </div>
+
+            </div>
+            <div class="card-body">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>
+                                Mã đơn hàng
+                            </th>
+                            <th>
+                                Ngày đặt
+                            </th>
+                            <th>
+                                đơn hàng
+                            </th>
+
+                            <th>
+                                Số điện thoại
+                            </th>
+                            <th>
+                                Trạng thái
+                            </th>
+                            <th>
+                                Tổng tiền
+                            </th>
+
+                            <th >Chức năng</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    @item.MaDdh
+
+                                </td>
+                                <td>
+                                    @item.NgayDat
+
+                                </td>
+                                <td>
+                                    @item.MaTk
+                                </td>
+                                <td>
+                                    @item.Sdt
+                                </td>
+
+                                <td>
+                                    <select class="form-control" id="status-order" onchange="updateOrderStatus(this,'@item.MaDdh')" style="color:black !important">
+                                        @if (item.TrangThai == 1)
+                                        {
+                                            <option value="1" selected >Đặt hàng</option>
+                                            <option value="2">Đang giao hàng</option>
+                                            <option value="4">Hủy</option>
+                                        }
+                                        else if (item.TrangThai == 2)
+                                        {
+                                            <option value="2" selected>Đang giao hàng</option>
+                                            <option value="3" >Thành công</option>
+                                        }
+                                        else if (item.TrangThai == 3)
+                                        {
+                                            <option value="3" selected disabled>Thành công</option>
+                                        }
+                                        else if (item.TrangThai == 4)
+                                        {
+                                            <option value="4" selected disabled>Hủy</option>
+                                        }
+                                    </select>
+                                   
+                                </td>
+                                <td>
+                                    @item.Tong.Value.ToString("#,##0").Replace(',', '.')đ
+                                </td>
+                                <td>
+                                    <a  href="/Admin/donhang/detail?orderId=@item.MaDdh"><i class="mdi mdi-information btn btn-warning btn-sm"></i>  </a>
+                                    <i class="mdi mdi-delete btn btn-danger btn-sm " onclick="return deleteOrder('@item.MaDdh') "></i>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                Trang @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+                @Html.PagedListPager(Model, page => Url.Action("index", new { page = page, searchQuery = ViewBag.SearchQuery, status = ViewBag.Status }),
+                         new PagedListRenderOptions { LiElementClasses = new string[] { "page-item" }, PageClasses = new string[] { "page-link" } })
+            </div>
+        </div>
+    </div>
+</main>
+<script>
+    function updateOrderStatus(selectElement,orderId) {
+        var selectedStatus = $(selectElement).val();
+       
+        $.ajax({
+            url: '/admin/donhang/updateorder',
+            type: 'POST',
+            data: JSON.stringify({ orderId: orderId, newStatus: selectedStatus }),
+            contentType: 'application/json; charset=utf-8',
+            dataType: 'json',
+            success: function (response) {
+                if (response.success) {
+                    alert(response.message);
+                    location.reload()
+                } else {
+                  
+                    console.error(response.message);
+                    
+                }
+            },
+            error: function (xhr, status, error) {
+               
+                console.error('Lỗi AJAX:', error);
+               
+            }
+        });
+    }
+    function deleteOrder(maDh) {
+        if (confirm("Bạn có chắc chắn muốn xóa đơn hàng này ?")) {
+            $.ajax({
+                type: "POST",
+                url: "/Admin/donhang/DeleteOrder",
+                data: { maDh: maDh },
+                success: function (result) {
+                    if (result === 1) {
+                        alert("Xóa đơn hàng thành công!");
+                        location.reload();
+                    } else {
+                        alert("Không tìm thấy đơn hàng để xóa.");
+                    }
+                },
+                error: function () {
+                    alert("Có lỗi xảy ra khi xóa đơn hàng.");
+                }
+            });
+        }
+        return false;
+    }
+</script>

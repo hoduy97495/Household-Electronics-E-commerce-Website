@@ -1,0 +1,46 @@
+﻿
+@{
+    ViewData["Title"] = "Profile";
+}
+
+
+@* <h2>Email: @Context.User.Identity.Email</h2> *@
+
+
+
+<div class="container mt-4">
+    <h2 class="mb-4">THÔNG TIN TÀI KHOẢN</h2>
+
+    <div class="card mb-3">
+        <div class="card-body d-flex">
+            <h4 class="card-text mr-2">Họ tên:</h4>
+            <h4 class="card-text">@Model.Ten</h4>
+        </div>
+    </div>
+
+    <div class="card mb-3">
+        <div class="card-body d-flex">
+            <h4 class="card-text mr-2">Số điện thoại:</h4>
+            <h4 class="card-text">@Model.Sdt</h4>
+        </div>
+    </div>
+
+    <div class="card mb-3">
+        <div class="card-body d-flex">
+            <h4 class="card-text mr-2">Địa chỉ:</h4>
+            <h4 class="card-text">@Model.DiaChi</h4>
+        </div>
+    </div>
+
+    <div class="card mb-3">
+        <div class="card-body d-flex">
+            <h4 class="card-text mr-2">Email:</h4>
+            <h4 class="card-text">@Model.Email</h4>
+        </div>
+    </div>
+
+    <div class="col-lg-6">
+        <a class="site-btn mr-2" asp-action="OrderHistory">Xem đơn hàng đã đặt</a>
+        <a class="site-btn" asp-action="DangXuat">Đăng Xuất</a>
+    </div>
+</div>

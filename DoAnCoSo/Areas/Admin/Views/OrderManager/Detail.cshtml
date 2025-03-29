@@ -1,0 +1,199 @@
+﻿@using DoAnCoSo.Areas.Admin.Models
+@model OrderViewModel
+
+@{
+    ViewData["Title"] = "Khách Hàng";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+<div class="container py-1">
+
+    <div class="row">
+        <div class="col-xl-6 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="d-flex align-items-center">
+                           
+                            <div class="ms-3">
+                                <p class="fw-bold mb-1">
+                                   Tên khách hàng:  @Model.khachHang.Ten
+                                </p>
+                                <p class="text-muted mb-0">
+                                        
+                                        Email: @Model.khachHang.Email
+                                        
+                                </p>
+                                <p class="text-muted mb-0">
+                                    Số điện thoại : @Model.khachHang.Sdt
+                                </p>
+                                
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="card-footer border-0 bg-light p-2 d-flex justify-content-around">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card " style="width:100%">
+        <div class="card-body">
+            <div class="container mb-5 mt-3">
+                <div class="row d-flex align-items-baseline">
+                    <div class="col-xl-9">
+                        <p style="color: #7e8d9f;font-size: 20px;">
+                            Hóa đơn  >> <strong>
+                                ID: @Model.donHang.MaDdh
+                            </strong>
+                        </p>
+                    </div>
+                    <div class="col-xl-3 float-end">
+
+                        <a class="btn btn-light text-capitalize" >
+                            <i class="far fa-file-pdf text-danger"></i> Export
+                        </a>
+                    </div>
+
+                </div>
+
+                <div class="container" id="hoadonct">
+                    <div class="col-md-12">
+                        <div class="text-center font-weight-bold">
+                            <h2>Hóa đơn</h2>
+                        </div>
+
+                    </div>
+
+
+                    <div class="row">
+                        <div class="col-xl-8">
+                            <ul class="list-unstyled">
+                                <li class="font-weight-bold">
+                                    Họ tên người nhận: <span style="color:#0d6efd ;">
+                                        @Model.donHang.Ten
+                                    </span>
+                                </li>
+
+                                <li class="font-weight-bold">
+                                    Địa chỉ:  @Model.donHang.DiaChi
+                                </li>
+
+                                <li class="font-weight-bold">
+                                    Số điện thoại: <i class="fas fa-phone"></i>  @Model.donHang.Sdt
+                                </li>
+                                <li class="font-weight-bold">
+                                    Ghi chú:  @Model.donHang.GhiChu
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-xl-4">
+
+                            <ul class="list-unstyled">
+                                <li class="text-dark">
+                                    <i class="fas fa-circle" style="color:#0d6efd ;"></i> 
+                                    
+                                    <span class="fw-bold font-weight-bold">
+                                        Mã đơn hàng:  @Model.donHang.MaDdh
+                                    </span>
+                                <li class="text-dark">
+                                    <i class="fas fa-circle" style="color:#0d6efd ;"></i> 
+                                    <span class="fw-bold">
+                                        Ngày mua:  @Model.donHang.NgayDat
+                                    </span>
+                                </li>
+                                    
+                                 
+                                    <li class="text-dark">
+                                        <i class="fas fa-circle" style="color:#0d6efd ;"></i> 
+                                        <span class="fw-bold">
+
+                                            @{
+                                                string trangThai = Model.donHang.TrangThai == 1 ? "Đặt hàng" :
+                                                                    Model.donHang.TrangThai == 2 ? "Đang giao hàng" :
+                                                                    Model.donHang.TrangThai == 3 ? "Thành công" :
+                                                                    Model.donHang.TrangThai == 4 ? "Đã hủy" : "";
+                                            }
+                                            Trạng thái : @trangThai
+                                        </span>
+                                    </li>
+                                    <li class="text-dark">
+                                    <i class="fas fa-circle" style="color:#0d6efd ;"></i>
+                                    <span class="fw-bold">
+                                        Phương thức thanh toán:  @Model.donHang.CachThanhToan
+                                    </span>
+                                    </li>
+                                    
+
+
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="row my-2 mx-1 justify-content-center">
+                        <table class="table table-striped table-borderless">
+                            <thead style="background-color:#2a5da9 ;" class="text-white">
+                                <tr>
+
+                                    <th scope="col">Tên sản phẩm</th>
+                                    <th scope="col">Số lượng</th>
+
+                                    <th scope="col">Đơn giá</th>
+                                    <th scope="col">Thành tiền</th>
+                                 
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.chiTietDonHangs)
+                                {
+                                    var tongtien = item.SoLuong * item.Gia;
+                                    
+                                    <tr>
+
+                                        <td>@item.TenSp</td>
+                                        <td>@item.SoLuong</td>
+
+
+                                        <td>@item.Gia</td>
+                                        <td>@tongtien.Value.ToString("#,##0").Replace(',', '.')đ</td>
+                                       
+                                    </tr>
+                                   
+
+                                }
+                            </tbody>
+
+                        </table>
+                    </div>
+
+
+                
+                    <div class="row">
+                        <div class="col-xl-8">
+                        </div>
+                        <div class="col-xl-3">
+                            <p class="text-black float-end">
+                                <span class="text-black me-3 font-weight-bold"> Phí giao hàng: </span><span class="font-weight-bold" style="font-size: 15px;">
+                                    @if (Model.donHang.PhiVanChuyen != null){
+                                        @Model.donHang.PhiVanChuyen.Value.ToString("#,##0").Replace(',', '.')
+                                    }
+                                </span>
+                            </p>
+                            <p class="text-black float-end">
+                                <span class="text-black me-3 font-weight-bold"> Tổng tiền </span><span class="font-weight-bold" style="font-size: 25px;">
+                                    @Model.donHang.Tong.Value.ToString("#,##0").Replace(',', '.')đ
+                                </span>
+                            </p>
+                        </div>
+                    </div>
+                    <hr>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,64 @@
+﻿@using DoAnCoSo.Models
+@using X.PagedList.Mvc.Core
+@model X.PagedList.IPagedList<DanhMuc>
+
+@{
+    ViewData["Title"] = "Danh Mục";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+<h1 class="mb-4">Danh Mục</h1>
+
+<p>
+    <a asp-action="ThemDanhMucMoi">Thêm danh mục</a>
+</p>
+
+<div class="card">
+    <div class="card-header">
+        Danh Sách Danh Mục
+    </div>
+    <div class="card-body">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Tên danh mục</th>
+                    <th>Hành Động</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@Html.DisplayFor(modelItem => item.TenDanhMuc)</td>
+                        <td>
+                            <a class="btn btn-sm btn-warning" asp-action="SuaDanhMuc" asp-route-id="@item.MaDanhMuc"><i class="fas fa-edit"></i> Sửa</a>
+                            <form method="post" asp-action="XoaDanhMuc">
+                                <input type="hidden" name="id" value="@item.MaDanhMuc" />
+                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Bạn có chắc chắn muốn xóa danh mục này?');"><i class="fas fa-trash"></i> Xóa</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="product__pagination">
+    @Html.PagedListPager(Model, page => Url.Action("DanhMuc", new { page }), new PagedListRenderOptions
+{
+    LiElementClasses = new[] { "page-item" },
+    PageClasses = new[] { "page-link" },
+    UlElementClasses = new[] { "pagination" },
+    DisplayLinkToFirstPage = PagedListDisplayMode.Always,
+    DisplayLinkToLastPage = PagedListDisplayMode.Always,
+    DisplayLinkToPreviousPage = PagedListDisplayMode.Always,
+    DisplayLinkToNextPage = PagedListDisplayMode.Always,
+    DisplayLinkToIndividualPages = true,
+    LinkToFirstPageFormat = "First",
+    LinkToPreviousPageFormat = "Previous",
+    LinkToNextPageFormat = "Next",
+    LinkToLastPageFormat = "Last"
+})
+</div>

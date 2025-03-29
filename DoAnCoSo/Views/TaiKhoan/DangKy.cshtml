@@ -1,0 +1,59 @@
+﻿@model DoAnCoSo.ViewModels.RegisterVM
+@{
+    ViewData["Title"] = "Đăng Ký";
+
+}
+
+<div class="container">
+
+    <h6 class="checkout__title">Đăng Ký</h6>
+    <form asp-action="DangKy" >
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="checkout__input">
+                    <label asp-for="@Model.Email">Email<span>*</span></label>
+                    <input asp-for="@Model.Email">
+                    <span asp-validation-for="@Model.Email"></span>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="checkout__input">
+                    <label class="form-label" asp-for="@Model.Ten">Họ và tên<span>*</span></label>
+                    <input asp-for="@Model.Ten">
+                    <span asp-validation-for="@Model.Ten"></span>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="checkout__input">
+                    <label class="form-label" asp-for="@Model.MatKhau">Mật Khẩu<span>*</span></label>
+                    <input asp-for="@Model.MatKhau">
+                    <span asp-validation-for="@Model.MatKhau"></span>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="checkout__input">
+                    <label class="form-label" asp-for="@Model.Sdt">Số điện thoại<span>*</span></label>
+                    <input asp-for="@Model.Sdt">
+                    <span asp-validation-for="@Model.Sdt"></span>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="checkout__input">
+                    <label class="form-label" asp-for="@Model.DiaChi">Địa chỉ<span>*</span></label>
+                    <input asp-for="@Model.DiaChi">
+                    <span asp-validation-for="@Model.DiaChi"></span>
+                </div>
+            </div>
+
+            <div class="col-lg-6 text-center">
+                <button type="submit" class="site-btn">Đăng Ký</button>
+
+
+            </div>
+
+
+
+
+    </form>
+
+</div>

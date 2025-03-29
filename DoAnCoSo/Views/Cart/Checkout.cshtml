@@ -1,0 +1,108 @@
+﻿@model IEnumerable<DoAnCoSo.ViewModels.CartItem>
+@{
+    ViewData["Title"] = "Checkout";
+}
+
+<section class="checkout spad col">
+    <div class="container">
+        <div class="checkout__form">
+            <h6 class="checkout__title">Thông tin nhận hàng</h6>
+            <form asp-action="Checkout">
+                <div class="row">
+
+                    <div class="col-lg-8 col-md-6">
+                        <form asp-action="Checkout" asp-controller="Cart">
+
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="checkout__input__checkbox">
+                                        <label for="GiongKhachHang">
+                                            Sử dụng thông tin của bạn?
+                                            <input type="checkbox" name="GiongKhachHang" id="GiongKhachHang" value="false">
+                                            <span class="checkmark"></span>
+                                        </label>
+                                        
+                                    </div>
+                                    <div class="checkout__input delivery-info" >
+                                        <p>Họ Tên<span>*</span></p>
+                                        <input type="text" name="Ten">
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="checkout__input delivery-info">
+                                <p>Địa chỉ nhận hàng<span>*</span></p>
+                                <input type="text" name="DiaChi">
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="checkout__input delivery-info" >
+                                        <p>Số điện thoại<span>*</span></p>
+                                        <input type="text" name="SDT">
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="checkout__input delivery-info" >
+                                <p>Ghi chú<span>*</span></p>
+                                <input type="text" name="GhiChu" placeholder="Notes about your order, e.g. special notes for delivery.">
+                            </div>
+                        </form>
+
+
+
+
+
+
+                    </div>
+
+                    <div class="col-lg-4 col-md-6">
+                        <div class="checkout__order">
+                            <h4 class="order__title">Your order</h4>
+                            <div class="checkout__order__products">Sản phẩm <span>Đơn giá</span></div>
+                            @foreach (var item in Model)
+                            {
+                                <ul class="checkout__total__products">
+
+                                    <img src="~/images/hinhSP/@item.HinhSp" style="width:90px; height:90px">
+                                    <li>@item.SoLuong @item.TenSp  <span>@item.ThanhTien<span class="icon">₫</span></span></li>
+
+                                </ul>
+                            }
+
+                            <ul class="checkout__total__all">
+                                <li>Tạm tính <span>@Model.Sum(p => p.ThanhTien)<span class="icon">₫</span></span></li>
+                                <li>Tổng cộng <span>@Model.Sum(p => p.ThanhTien)<span class="icon">₫</span></span></li>
+                            </ul>
+
+
+
+
+                            <input type="submit" name="payment" class="site-btn" value="Đặt Hàng (COD)" >
+                           <input type="submit" name="payment" class="site-btn" value="Thanh Toán VNPay" >
+                        </div>
+                    </div>
+
+            </form>
+
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+  
+	<script>
+		$(document).ready(function () {
+			$("#GiongKhachHang").change(function () {
+				if ($(this).prop("checked")) {
+					$(this).val(true);
+					$(".delivery-info").addClass("d-none");
+				} else {
+					$(this).val(false);
+					$(".delivery-info").removeClass("d-none");
+				}
+			});
+		});
+     </Script>
+}
+	

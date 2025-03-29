@@ -1,0 +1,98 @@
+﻿@using DoAnCoSo.Models
+@using X.PagedList.Mvc.Core
+@model X.PagedList.IPagedList<SanPham>
+
+@{
+    ViewData["Title"] = "Sản Phẩm";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+<h1 class="mb-4">Sản Phẩm</h1>
+
+
+
+<div class="card">
+    <div class="card-header">
+        <div class="row">
+            <div class="col-md-2">
+                <a  asp-action="ThemSanPhamMoi" class="btn btn-success text-white p-2 ">
+                    <i class="fas fa-plus-square"></i>
+                    Thêm sản phẩm
+                </a>
+            </div>
+            <div class="col-md-4 ms-auto">
+                <form method="get" >
+                    <div class="input-group">
+                        <input class="form-control border-end-0 border rounded-pill " type="search" value="@ViewBag.SearchQuery" name="searchQuery" placeholder="nhập tên hoặc mã sản phẩm để tìm kiếm" id="example-search-input">
+                        <span class="input-group-append">
+                            <button class="btn btn-outline-light bg-primary border-bottom-0 border rounded-pill ms-n5" type="submit">
+                                <i class="fa fa-search">Tìm kiếm</i>
+                            </button>
+                        </span>
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Mã sản phẩm</th>
+                    <th>Tên sản phẩm</th>
+                    <th>Số Lượng</th>
+                    <th>Hàng tồn</th>
+                    <th>Giá</th>
+                    <th>Lượt mua</th>
+                    <th>Ngày Tạo</th>
+                    <th>Hành Động</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                   @*  var tongSoLuongChiTiet = item.ChiTietDonHangs.Sum(ct => ct.SoLuong);
+                    var hangTon = item.SoLuong - (tongSoLuongChiTiet != null ? tongSoLuongChiTiet : 0); *@ 
+                    var hangTon = item.SoLuong - item.ChiTietDonHangs.Sum(ct => ct.SoLuong) ?? 0;
+
+                    <tr>
+                        <td>@Html.DisplayFor(modelItem => item.MaSanPham)</td>
+                        <td>@Html.DisplayFor(modelItem => item.TenSp)</td>
+                        <td>@Html.DisplayFor(modelItem => item.SoLuong)</td>
+                        <td>@hangTon</td>
+                        <td>@Html.DisplayFor(modelItem => item.Gia)</td>
+                        <td>@Html.DisplayFor(modelItem => item.LuotMua)</td>
+                        <td>@Html.DisplayFor(modelItem => item.NgayTao)</td>
+                        <td>
+                            <a class="btn btn-sm btn-warning" asp-action="SuaSanPham" asp-route-MaSanPham="@item.MaSanPham"><i class="fas fa-edit"></i> Sửa</a>
+                            <a class="btn btn-sm btn-info" asp-action="ChiTietSanPham" asp-route-productId="@item.MaSanPham"><i class="fas fa-info-circle"></i> Chi tiết</a>
+                            <form method="post" asp-action="XoaSanPham">
+                                <input type="hidden" name="maSanPham" value="@item.MaSanPham" />
+                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Bạn có chắc chắn muốn xóa sản phẩm này?');"><i class="fas fa-trash"></i> Xóa</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="product__pagination">
+    @Html.PagedListPager(Model, page => Url.Action("SanPham", new { page = page, searchQuery = ViewBag.SearchQuery }), new PagedListRenderOptions
+{
+    LiElementClasses = new[] { "page-item" },
+    PageClasses = new[] { "page-link" },
+    UlElementClasses = new[] { "pagination" },
+    DisplayLinkToFirstPage = PagedListDisplayMode.Always,
+    DisplayLinkToLastPage = PagedListDisplayMode.Always,
+    DisplayLinkToPreviousPage = PagedListDisplayMode.Always,
+    DisplayLinkToNextPage = PagedListDisplayMode.Always,
+    DisplayLinkToIndividualPages = true,
+    LinkToFirstPageFormat = "First",
+    LinkToPreviousPageFormat = "Previous",
+    LinkToNextPageFormat = "Next",
+    LinkToLastPageFormat = "Last"
+})
+</div>

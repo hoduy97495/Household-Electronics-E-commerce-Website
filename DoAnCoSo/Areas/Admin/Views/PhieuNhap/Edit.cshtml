@@ -1,0 +1,133 @@
+﻿@{
+    ViewData["Title"] = "Sửa phiếu nhập";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+<main>
+    <div class="container-fluid px-4">
+        <h4>Sửa phiếu nhập : Mã phiếu nhập #@ViewBag.MaPN </h4>
+        <div class="row">
+            <div class="col-md-4">
+                <form id="form-phieu-nhap" href="/Admin/phieunhap/edit" method="post">
+                    <input hidden name="MaPN" value="@ViewBag.MaPN" />
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <div class="form-group">
+                        <label class="control-label">Nhà cung cấp</label>
+                        <select class="form-control" id="select-ncc" name="NhaCungCapId" asp-items="ViewBag.NhaCungCaps" style="width:300px !important ;"></select>
+                    </div>
+                    <div id="chi-tiet-phieu-nhap-data">
+                    </div>
+                    <table id="product-table" class="table">
+                        <thead>
+                            <tr>
+                                <th>Sản phẩm</th>
+                                <th>Số lượng</th>
+                                <th>Đơn giá</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in ViewBag.CTPNSanPhams)
+                            {
+
+                                <tr>
+                                    <td>
+                                        <select class="form-control product-select" style="width:400px !important;color:black !important;" data-selected-value="@item.MaSanPham" asp-items="ViewBag.SanPhams"></select>
+                                    </td>
+                                    <td>
+                                        <input type="number" class="form-control quantity-input" style="width:100px !important" value="@item.SoLuongNhap" min="1" />
+                                    </td>
+                                    <td>
+                                        <input type="number" class="form-control price-input" style="width:200px !important" value="@item.DonGia" min="0" />
+                                    </td>
+                                    <td>
+                                        <button type="button" class="btn btn-success add-row btn-sm">+</button>
+                                    </td>
+                                    <td>
+                                        <button type="button" class="btn btn-danger btn-sm remove-row"><i class="mdi mdi-delete"></i></button>
+                                    </td>
+
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                    <div class="form-group mt-4">
+                        <input type="submit" value="Sửa" class="btn btn-primary" />
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div>
+            <a asp-action="Index">Quay Lại</a>
+        </div>
+    </div>
+</main>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js" type="text/javascript"></script>
+
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.8/js/select2.min.js" defer></script>
+<script>
+    $(document).ready(function () {
+        $('#select-ncc').select2();
+        $('.product-select').each(function () {
+            var selectedValue = $(this).data('selected-value');
+            $(this).val(selectedValue);
+        });
+        $('#product-table tbody').on('click', '.add-row', function () {
+            var row = $(this).closest('tr');
+            var productId = row.find('.product-select').val();
+            var quantity = row.find('.quantity-input').val();
+            var price = row.find('.price-input').val();
+
+            if (productId && quantity && price) {
+                var newRow = row.clone();
+                newRow.find('.quantity-input').val(1);
+                newRow.find('.price-input').val(0);
+                row.after(newRow);
+            }
+        });
+
+        $('#product-table tbody').on('click', '.remove-row', function () {
+            var $rows = $('#product-table tbody tr');
+            if ($rows.length > 1) {
+                $(this).closest('tr').remove();
+            } else {
+                alert('Phải có ít nhất một hàng trong bảng.');
+            }
+           
+        });
+        $('input[type="submit"]').on('click', function (e) {
+            e.preventDefault();
+            var chiTietPhieuNhaps = [];
+
+            $('#product-table tbody tr').each(function () {
+                var row = $(this);
+                var sanPhamId = row.find('.product-select').val();
+                var soLuong = row.find('.quantity-input').val();
+                var donGia = row.find('.price-input').val();
+
+                if (sanPhamId && soLuong && donGia) {
+                    chiTietPhieuNhaps.push({
+                        SanPhamId: sanPhamId,
+                        SoLuong: soLuong,
+                        DonGia: donGia
+                    });
+                }
+            });
+            $('#chi-tiet-phieu-nhap-data').html('');
+            $.each(chiTietPhieuNhaps, function (index, item) {
+                $('#chi-tiet-phieu-nhap-data').append(
+                    '<input type="hidden" name="ChiTietPhieuNhaps[' + index + '].SanPhamId" value="' + item.SanPhamId + '" />' +
+                    '<input type="hidden" name="ChiTietPhieuNhaps[' + index + '].SoLuong" value="' + item.SoLuong + '" />' +
+                    '<input type="hidden" name="ChiTietPhieuNhaps[' + index + '].DonGia" value="' + item.DonGia + '" />'
+                );
+            });
+
+
+            $('#form-phieu-nhap').submit();
+        });
+    });
+</script>
+
